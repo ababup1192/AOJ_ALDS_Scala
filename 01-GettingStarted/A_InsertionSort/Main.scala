@@ -6,25 +6,24 @@ object Main extends App {
   val sortedList = isort(list)
   println(sortedList.mkString(" "))
   // 要素xをリストxsの適当な場所に挿入する。
-  def insert(x:Int,  xs:List[Int]): List[Int] = {
-    xs match{
-      case Nil => List(x)
-      case y::ys =>
+  def insert: (Int, List[Int]) => List[Int] = {
+      case (x, Nil) => List(x)
+      case (x, y :: ys) =>
         // リストの先頭よりxが小さいとき
-        if(y >= x) x :: xs
+        if(y >= x) x :: y :: ys
         // 先頭に挿入出来ない場合は
         // リストの残りの要素を挿入対象のリストとして再帰
-        else y :: insert(x,  ys)
-    }
+        else y :: insert(x, ys)
   }
 
-  def isort(xs : List[Int]) : List[Int] = {
-    println(xs.mkString(" "))
-    xs match{
+  def isort(list: List[Int]) : List[Int] = {
+    // 実はこれではダメ グローバルな状態を持つくらいしか綺麗な状態表示はできなそう。
+    println(list.mkString(" "))
+    list match{
       case Nil => Nil
       // 未挿入リスト => (先頭 :: 残り) => 先頭を挿入,  残りに対して挿入ソートの再帰
-      case x :: xs1 =>
-        insert(x,   isort(xs1))
+      case x :: xs =>
+        insert(x, isort(xs))
     }
   }
 }
